@@ -1,14 +1,21 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
-    namespace = "io.android.startrack"
+    namespace = "io.startrack"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 24
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 
     buildTypes {
@@ -26,6 +33,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "io.startrack"
+            artifactId = "android-library"
+            version = "1.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
     }
 }
 
